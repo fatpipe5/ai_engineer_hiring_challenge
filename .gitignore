@@ -1,5 +1,8 @@
 oauth_client.json
 
+# Generated PDF reports (commit a chosen sample with `git add -f` if needed)
+reports/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

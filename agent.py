@@ -4,6 +4,7 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 from tools.ga4 import get_ga4_data
 from tools.sandbox import run_python
+from tools.report import export_pdf
 
 
 load_dotenv()
@@ -30,6 +31,11 @@ or forecasting -- use the run_python tool:
 - The sandbox has pandas and numpy, but NO internet and NO access to GA4 or any
   credentials -- so always fetch data first and pass it in; don't try to call
   GA4 from inside the code.
+
+If the user asks for a PDF or a report, call the export_pdf tool with a short
+title and the full report as `content` (you may use light markdown: '# '/'## '
+headings, '- ' bullets, and **bold**). After it returns a path, tell the user
+where the PDF was saved.
 
 If a tool returns an {"error": ...}, read it, fix your request, and try again."""
 
@@ -99,11 +105,34 @@ TOOLS = [
             "required": ["code"],
         },
     },
+    {
+        "name": "export_pdf",
+        "description": (
+            "Export a report to a PDF file. Call this when the user asks for a "
+            "PDF or a report. Returns the saved file path."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "Short report title (also used in the filename).",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "The report body as text or light markdown "
+                    "('# '/'## ' headings, '- ' bullets, **bold**).",
+                },
+            },
+            "required": ["title", "content"],
+        },
+    },
 ]
 
 TOOL_FUNCTIONS = {
     "get_ga4_data": get_ga4_data,
     "run_python": run_python,
+    "export_pdf": export_pdf,
 }
 
 
